@@ -26,31 +26,6 @@ from airflow.operators.bash_operator import BashOperator
 from airflow.contrib.operators import kubernetes_pod_operator
 from airflow.utils.dates import days_ago
 
-tolerations = [
-    {
-        'key': "workshop",
-        'operator': 'Equal',
-        'value': 'custom',
-        'effect': "NoSchedule"
-    }
-]
-
-aff = {
-    'nodeAffinity': {
-        'requiredDuringSchedulingIgnoredDuringExecution': {
-            'nodeSelectorTerms': [{
-                'matchExpressions': [{
-                    'key': 'cloud.google.com/gke-nodepool',
-                    'operator': 'In',
-                    'values': [
-                        'memory-heavy'
-                    ]
-                }]
-            }]
-        }
-    }
-}
-
 with models.DAG(
     "example_pod_operator_xcom",
     schedule_interval=None,  # Override to match your needs

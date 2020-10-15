@@ -26,7 +26,7 @@ from airflow.operators.bash_operator import BashOperator
 from airflow.contrib.operators.gcp_container_operator import GKEPodOperator
 from airflow.utils.dates import days_ago
 
-GCP_PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "ael-cx")
+GCP_PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "")
 GCP_LOCATION = os.environ.get("GCP_GKE_LOCATION", "europe-west1-c")
 CLUSTER_NAME = os.environ.get("GCP_GKE_CLUSTER_NAME", "machinelearning")
 

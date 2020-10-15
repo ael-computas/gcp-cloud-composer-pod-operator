@@ -8,30 +8,6 @@ from utils.kubernetes import Tolerations, Affinity
 
 YESTERDAY = datetime.datetime.now() - datetime.timedelta(days=1)
 
-tolerations = [
-    {
-        'key': "workshop",
-        'operator': 'Equal',
-        'value': 'custom',
-        'effect': "NoSchedule"
-    }
-]
-
-aff = {
-    'nodeAffinity': {
-        'requiredDuringSchedulingIgnoredDuringExecution': {
-            'nodeSelectorTerms': [{
-                'matchExpressions': [{
-                    'key': 'cloud.google.com/gke-nodepool',
-                    'operator': 'In',
-                    'values': [
-                        'memory-heavy'
-                    ]
-                }]
-            }]
-        }
-    }
-}
 
 with models.DAG(
         dag_id='composer_kubernetes_pod_simple',

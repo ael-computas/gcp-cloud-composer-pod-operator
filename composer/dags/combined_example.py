@@ -4,31 +4,7 @@ from airflow.utils.dates import days_ago
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.contrib.operators import kubernetes_pod_operator
-
-tolerations = [
-    {
-        'key': "workshop",
-        'operator': 'Equal',
-        'value': 'custom',
-        'effect': "NoSchedule"
-    }
-]
-
-aff = {
-    'nodeAffinity': {
-        'requiredDuringSchedulingIgnoredDuringExecution': {
-            'nodeSelectorTerms': [{
-                'matchExpressions': [{
-                    'key': 'cloud.google.com/gke-nodepool',
-                    'operator': 'In',
-                    'values': [
-                        'memory-heavy'
-                    ]
-                }]
-            }]
-        }
-    }
-}
+from utils.kubernetes import Tolerations, Affinity
 
 with models.DAG(
     "combined_example",
@@ -59,8 +35,8 @@ with models.DAG(
                        'limit_memory': '500Mi',
                        'limit_cpu': 1},
             image='gcr.io/gcp-runtimes/ubuntu_18_0_4',
-            tolerations=tolerations,
-            affinity=aff
+            tolerations=Tolerations.default,
+            affinity=Affinity.memory_heavy
         ))
 
     start_task >> source_1_task >> start_processing

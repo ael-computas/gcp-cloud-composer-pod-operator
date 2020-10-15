@@ -75,6 +75,7 @@ resource "google_composer_environment" "composer" {
         jira = ""
       }
       env_variables = {
+        GCP_PROJECT_ID = var.gcp_project_id
       }
     }
   }

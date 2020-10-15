@@ -4,31 +4,8 @@ from airflow.utils.dates import days_ago
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.contrib.operators import kubernetes_pod_operator
+from utils.kubernetes import Tolerations, Affinity
 
-tolerations = [
-    {
-        'key': "workshop",
-        'operator': 'Equal',
-        'value': 'custom',
-        'effect': "NoSchedule"
-    }
-]
-
-aff = {
-    'nodeAffinity': {
-        'requiredDuringSchedulingIgnoredDuringExecution': {
-            'nodeSelectorTerms': [{
-                'matchExpressions': [{
-                    'key': 'cloud.google.com/gke-nodepool',
-                    'operator': 'In',
-                    'values': [
-                        'memory-heavy'
-                    ]
-                }]
-            }]
-        }
-    }
-}
 
 with models.DAG(
     "combined_example_resource_shortage_fails",
@@ -60,8 +37,8 @@ with models.DAG(
                        'limit_memory': '3Gi',
                        'limit_cpu': 1},
             image='gcr.io/gcp-runtimes/ubuntu_18_0_4',
-            tolerations=tolerations,
-            affinity=aff,
+            tolerations=Tolerations.default,
+            affinity=Affinity.memory_heavy,
             startup_timeout_seconds=60,
         ))
 
